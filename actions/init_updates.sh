@@ -9,5 +9,5 @@ echo "# Done"
 echo "# Creating readme"
 # make readme
 npm i -g plop
-plop readme "$name"
+plop readme "$name" --force
 echo "# Done"
