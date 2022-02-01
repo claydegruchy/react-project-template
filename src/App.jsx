@@ -1,43 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Select from 'react-select';
+
+var defaultUiParams = {};
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [uiOptions, setUiOptions] = useState(defaultUiParams);
 
+  useEffect(() => {
+    // Stuff to do when the UI updates
+  }, [uiOptions]);
+
+  const SearchableDropdown = ({ label, options, selectParams }) => {
+    const set = (e) => setUiOptions({ ...uiOptions, [label]: e });
+    return (
+      <div>
+        {/*this select package really fucking sucks ass, the style application
+         system is garbo and akin to banging rocks together */}
+        <Select
+          // isClearable
+          {...selectParams}
+          // placeholder={''}
+          value={uiOptions[label]}
+          onChange={set}
+          // theme={themes[uiOptions.selectedTheme.value]}
+          // styles={dropDownStyles}
+          options={options}
+        />
+      </div>
+    );
+  };
+  const Checkbox = ({ label, secretMessage }) => {
+    const set = (e) =>
+      setUiOptions({ ...uiOptions, [label]: !uiOptions[label] });
+    return (
+      <div title={secretMessage}>
+        <input
+          name={label}
+          type='checkbox'
+          checked={uiOptions[label]}
+          onChange={set}
+        />
+        <div>{label}</div>
+      </div>
+    );
+  };
   return (
     <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type='button' onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className='App-link'
-            href='https://reactjs.org'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className='App-link'
-            href='https://vitejs.dev/guide/features.html'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <div>
+        <SearchableDropdown
+          label={'example1'}
+          selectParams={{ placeholder: 'This is a placeholder' }}
+          options={[1, 2, 3].map((b) => ({
+            value: b,
+            label: b,
+          }))}
+        />
+        <Checkbox label={'Example'} />
+      </div>
     </div>
   );
 }
